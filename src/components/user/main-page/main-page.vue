@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import CourseCard from "@/components/ui/card/course-card.vue";
+import CourseCard from "@/ui-components/card/course-card.vue";
 import CloseMd from "@/ui-components/icons/close-md.vue";
 
 import { useFiltersStore } from "./composables/useFilters";

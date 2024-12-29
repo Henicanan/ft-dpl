@@ -1,5 +1,16 @@
 <script setup lang="ts">
 import { ref } from "vue";
+import ModalCard from "../modal/modal-card-description.vue";
+
+const isModalVisible = ref<boolean>(false);
+
+const openModal = () => {
+  isModalVisible.value = true;
+};
+
+const closeModal = () => {
+  isModalVisible.value = false;
+};
 </script>
 
 <template>
@@ -27,11 +38,19 @@ import { ref } from "vue";
     </section>
     <footer class="card-footer">
       <span class="card-price">500 ₽</span>
-      <button class="card-button" @click="() => console.log('click')">
-        Подробнее
-      </button>
+      <button class="card-button" @click="openModal">Подробнее</button>
     </footer>
   </article>
+
+  <ModalCard
+    :title="'Основы JavaScript'"
+    :content="'fsdfds'"
+    :visible="isModalVisible"
+    :price="'200р'"
+    :lessons-count="200"
+    :course-description="'fsdfds'"
+    @close="closeModal"
+  />
 </template>
 
 <style scoped lang="scss">
