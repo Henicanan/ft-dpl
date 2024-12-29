@@ -65,6 +65,8 @@ onBeforeMount(() => {
 <style scoped lang="scss">
 .user-page {
   display: flex;
+  max-width: 100%;
+  width: 100%;
 }
 
 .left-panel {

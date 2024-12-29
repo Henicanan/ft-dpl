@@ -93,7 +93,7 @@ const filtersStore = useFiltersStore();
 
 <style lang="scss" scoped>
 .container {
-  width: 100%ы;
+  width: 100%;
   margin: 3rem auto;
   padding: 1rem;
   box-sizing: border-box;
