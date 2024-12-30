@@ -1,11 +1,23 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import ModalCard from "../modal/modal-card-description.vue";
+import { useRouter } from "vue-router";
+
+const router = useRouter();
 
 const isModalVisible = ref<boolean>(false);
 
+const props = defineProps({
+  isPersonalLinkActive: { type: Boolean, default: false },
+  isBought: { type: Boolean, default: false },
+});
+
 const openModal = () => {
   isModalVisible.value = true;
+};
+
+const openCourse = () => {
+  router.push("course");
 };
 
 const closeModal = () => {
@@ -37,8 +49,22 @@ const closeModal = () => {
       </div>
     </section>
     <footer class="card-footer">
-      <span class="card-price">500 ₽</span>
-      <button class="card-button" @click="openModal">Подробнее</button>
+      <span v-if="!isBought" class="card-price">500 ₽</span>
+      <span v-if="isBought" class="card-price">Куплено</span>
+      <button
+        v-if="!isPersonalLinkActive"
+        class="card-button"
+        @click="openModal"
+      >
+        Подробнее
+      </button>
+      <button
+        v-if="isPersonalLinkActive"
+        class="card-button"
+        @click="openCourse"
+      >
+        Перейти
+      </button>
     </footer>
   </article>
 
