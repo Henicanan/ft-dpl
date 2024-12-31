@@ -1,20 +1,50 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
 import { useAuthStore } from "../store/useAuth";
 import { roles } from "../../../constants/roles";
+import {
+  validateLogin,
+  validatePassword,
+} from "../user/composables/validationUserSchemas";
 
 const router = useRouter();
 const authStore = useAuthStore();
 
 const roleName = ref<string>(roles.student);
 
+const errorMessages = ref<{ email: string; password: string }>({
+  email: "",
+  password: "",
+});
+
+const validateForm = () => {
+  const isLoginlValid = validateLogin(authStore.email);
+  const isPasswordValid = validatePassword(authStore.password);
+
+  console.log("Login valid:", isLoginlValid);
+  console.log("Password valid:", isPasswordValid);
+
+  errorMessages.value.email = isLoginlValid ? "" : "Неверный формат логина.";
+  errorMessages.value.password = isPasswordValid
+    ? ""
+    : "Пароль должен быть не менее 8 символов, содержать прописные и строчные буквы, цифры и спецсимволы.";
+
+  return isLoginlValid && isPasswordValid;
+};
+
 const handleRegister = async () => {
-  try {
-    await authStore.register(roleName.value);
-    router.push("/auth");
-  } catch (err) {
-    console.log(err);
+  if (validateForm()) {
+    try {
+      console.log("Регистрация началась");
+      await authStore.register(roleName.value);
+      console.log("Регистрация прошла успешно");
+      router.push("/auth");
+    } catch (err) {
+      console.error("Ошибка регистрации:", err);
+    }
+  } else {
+    console.log("Форма не прошла валидацию");
   }
 };
 </script>
@@ -33,6 +63,9 @@ const handleRegister = async () => {
             placeholder="Введите ваш логин"
             class="form-input"
           />
+          <p v-if="errorMessages.email" class="error-message">
+            {{ errorMessages.email }}
+          </p>
         </div>
         <div class="form-group">
           <label for="password" class="form-label">Пароль</label>
@@ -43,6 +76,9 @@ const handleRegister = async () => {
             placeholder="Введите пароль"
             class="form-input"
           />
+          <p v-if="errorMessages.password" class="error-message">
+            {{ errorMessages.password }}
+          </p>
         </div>
         <button type="submit" class="btn btn-primary">Создать аккаунт</button>
       </form>
@@ -106,6 +142,12 @@ const handleRegister = async () => {
     border-color: $input-focus;
     box-shadow: 0 0 0 3px rgba($input-focus, 0.2);
   }
+}
+
+.error-message {
+  color: red;
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
 }
 
 .btn {
